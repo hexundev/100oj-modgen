@@ -1,6 +1,6 @@
 # 100% Orange Juice Mod File Generator
 
-[Refer to the official guide for details](https://steamcommunity.com/sharedfiles/filedetails/?id=2203957374)
+[Refer to the official guide for details](https://steamcommunity.com/sharedfiles/filedetails/?id=2189405817)
 
 Disclaimer
 
