@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+  <title>100% Orange Juice Mod Generator</title>
+</head>
+
+<body>
+
+  <!-- Main container-->
+  <div class="container">
+
+    <img src="img/100ojmod.png" class="rounded mx-auto d-block" alt="100% Modding Juice Logo">
+
+    <div class="alert alert-primary" role="alert">
+      View the 100% Orange Juice full modding guide <a
+        href="https://steamcommunity.com/sharedfiles/filedetails/?id=2189405817" class="alert-link">here</a>.
+      <br>
+      日本語のMODマニュアルは<a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2203957374"
+        class="alert-link">こちら</a>です。
+      <br>
+      You can also join our <a href="https://discord.com/invite/fruitbatfactory" class="alert-link">Discord server</a>
+      where you can
+      discuss in our
+      modding channel!
+    </div>
+
+    <div class="alert alert-secondary" role="alert">
+      <b>Disclaimer:</b><br>
+      - I am not a web dev!<br>
+      - There is no official support for it so do not report bugs in the <b>#support</b> channel!<br>
+      - I made this quickly to try and help people making mods in the new format<br>
+      - Feel free to fork and make changes
+    </div>
+
+    <div class="alert alert-warning" role="warning">
+      <b>Notice</b><br>
+      Before making any mod public, it is the responsibility of the creator to refer to the latest version of the
+      guide linked above to make sure their mod is compatible with the current mod guidelines and use limitations.
+    </div>
+
+    <h3>Load Mod</h3>
+    <p>In the future you'll be able to load legacy mods.</p>
+    <input type="file" id="file-txt" accept=".txt" style="display:none">
+    <input type="file" id="file-json" accept=".json" style="display:none">
+    <button class="btn btn-primary" id="b-loadjson" type="button">Load JSON</button>
+    <button class="btn btn-primary" id="b-reset" type="button">Reset Form</button>
+    <hr>
+
+    <div class="mt-5 col-md-12"></div>
+
+    <h2>Mod Definition</h2>
+    <div class="mt-5 col-md-12"></div>
+
+    <div>
+      <h3>Basic Information</h3>
+      <div class="mt-4 col-md-12"></div>
+
+      <form>
+        <div class="form-group row">
+          <label for="form-modinfo-name" class="col-sm-2 col-form-label">Mod Name</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="form-modinfo-name" placeholder="Ex: My first mod" required>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="form-modinfo-description" class="col-sm-2 col-form-label">Mod Description</label>
+          <div class="col-sm-10">
+            <textarea class="form-control" id="form-modinfo-description" rows="3"
+              placeholder="Ex: Makes Poppo huge."></textarea>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="form-modinfo-author" class="col-sm-2 col-form-label">Author</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="form-modinfo-author" placeholder="Ex: Kai" required>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="form-modinfo-sysversion" class="col-sm-2 col-form-label">System Version</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="form-modinfo-sysversion" readonly value="2" required>
+          </div>
+        </div>
+
+        <!-- Optional Data -->
+        <div class="form-group row">
+          <label for="form-modinfo-changelog" class="col-sm-2 col-form-label">Changelog (Optional)</label>
+          <div class="col-sm-10">
+            <textarea class="form-control" id="form-modinfo-changelog" rows="4"></textarea>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="form-modinfo-color" class="col-sm-2 col-form-label">Mod Box Color (Optional)</label>
+          <br>
+          <div class="col-sm-10">
+            <input type="color" id="form-modinfo-color" value="#FFBC5E">
+          </div>
+        </div>
+
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="" id="form-modinfo-contest">
+          <label class="form-check-label" for="form-modinfo-contest">
+            Contest Entry? (Optional: Only used for contests)
+          </label>
+        </div>
+
+      </form>
+      <div class="mt-5 col-md-12"></div>
+
+      <h3>Mod replacements</h3>
+      <p> The sections below include various things you can replace.
+        Your mod can include many kinds of replacements such as textures, music, voices and so on.
+        You do not need to fill in each section, only the one(s) you want.</p>
+      <div class="mt-4 col-md-12"></div>
+
+      <!-- ------------------------------------------------------------------------- -->
+      <h3>Textures</h3>
+      <!--<div>
+        <h5>Textures List</h5>
+        <div class="alert alert-secondary" role="alert" id="form-modrep-textures">
+        </div>
+      </div> -->
+      <hr>
+
+      <h5>Add a Texture (Basic)</h5>
+      <div class="alert alert-primary" role="alert">
+        For units you can specify all poses or a single one.
+        <br>Examples:<br>
+        units/cuties_00 replaces all poses (cuties_00_00 to cuties_00_05)
+        <br>
+        units/cuties_00_01 only replaces this pose.
+      </div>
+      <hr>
+
+      <form class="form-inline">
+        <label class="sr-only" for="form-modrep-texture-basic">Path</label>
+        <input type="text" class="form-control mb-2 mr-sm-2" id="form-modrep-texture-basic"
+          placeholder="Ex: units/sora_00">
+
+        <button type="button" class="btn btn-primary mb-2" id="b-addtexture-basic">Add Texture</button>
+      </form>
+
+      <div class="mt-3 col-md-12"></div>
+      <br>
+      <h5>Add a Texture (Advanced)</h5>
+      <hr>
+
+      <form>
+        <div class="form-group row">
+          <label for="form-texadv-path" class="col-sm-2 col-form-label">Path</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="form-texadv-path"
+              placeholder="Ex: units/cuties_03_01 cards/cuties" required>
+          </div>
+        </div>
+
+        <p>Face Coordinates (0-256 for each)</p>
+        <div class="form-group row">
+          <label for="form-texadv-facex" class="col-sm-2 col-form-label">X</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="form-texadv-facex" placeholder="Ex: 128">
+          </div>
+          <label for="form-texadv-facey" class="col-sm-2 col-form-label">Y</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="form-texadv-facey" placeholder="Ex: 255">
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="form-texadv-costumeid" class="col-sm-2 col-form-label">Costume ID</label>
+          <div class="col-sm-10">
+            <select class="form-control" id="form-texadv-costumeid">
+            </select>
+          </div>
+        </div>
+        <hr>
+        <div class="form-group row">
+          <label for="form-texadv-cardname" class="col-sm-2 col-form-label">Custom Name (Cards Only)</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="form-texadv-cardname" placeholder="Ex: My Cool Card" required>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="form-texadv-cardflavor" class="col-sm-2 col-form-label">Custom Flavor Text (Cards Only)</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="form-texadv-cardflavor" placeholder="Ex: Po -Poppo" required>
+          </div>
+        </div>
+
+        <hr>
+        <div class="form-check row">
+          <div class="col-sm-10">
+            <input class="form-check-input" type="checkbox" value="" id="form-texadv-singlefile">
+            <label class="form-check-label" for="form-texadv-singlefile">
+              Single File Replacement (If you only want to replace 1 pose Ex: cuties_00_01)
+            </label>
+          </div>
+        </div>
+        <div class="mt-4 col-md-12"></div>
+
+        <button type="button" class="btn btn-primary mb-2" id="b-addtexture-advanced">Add Texture</button>
+        <button type="button" class="btn btn-primary mb-2" id="b-addtexture-clear">Clear</button>
+      </form>
+
+      <!-- ------------------------------------------------------------------------- -->
+      <div class="mt-4 col-md-12"></div>
+      <h3>Music</h3>
+      <hr>
+
+      <div class="alert alert-primary" role="alert">
+        You can replace character music or music used for events, see the guide for more info.
+      </div>
+
+      <h4>Character Music</h4>
+      <form>
+        <div class="form-group row">
+          <label for="form-music-unit" class="col-sm-2 col-form-label">Unit ID</label>
+          <div class="col-sm-10">
+            <select class="form-control" id="form-music-unit">
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="form-music-file" class="col-sm-2 col-form-label">File</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="form-music-file" placeholder="Ex: music/grayhued" required>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="form-music-loop" class="col-sm-2 col-form-label">Loop Point (Optional)</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="form-music-loop" placeholder="Ex: 796411">
+          </div>
+        </div>
+
+        <div class="mt-4 col-md-12"></div>
+
+        <button type="button" class="btn btn-primary mb-2" id="b-addmusic">Add Character Music</button>
+
+      </form>
+
+      <div class="mt-4 col-md-12"></div>
+      <hr>
+
+      <h4>Event Music</h4>
+      <form>
+        <div class="form-group row">
+          <label for="form-eventmusic-event" class="col-sm-2 col-form-label">Event Name</label>
+          <div class="col-sm-10">
+            <select class="form-control" id="form-eventmusic-event">
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="form-eventmusic-file" class="col-sm-2 col-form-label">File</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="form-eventmusic-file" placeholder="Ex: music/grayhued" required>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="form-eventmusic-loop" class="col-sm-2 col-form-label">Loop Point (Optional)</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="form-eventmusic-loop" placeholder="Ex: 796411">
+          </div>
+        </div>
+
+        <div class="mt-4 col-md-12"></div>
+
+        <button type="button" class="btn btn-primary mb-2" id="b-addeventmusic">Add Event Music</button>
+
+      </form>
+
+      <hr>
+
+      <!-- ------------------------------------------------------------------------- -->
+      <div class="mt-4 col-md-12"></div>
+      <h3>Voices</h3>
+
+      <div class="alert alert-primary" role="alert">
+        You can replace a character and/or system voice in this section. See the guide for info on what files to
+        include in your mod.
+      </div>
+
+      <h5>Character Voice</h5>
+      <hr>
+      <form class="form-inline">
+        <input type="text" class="form-control mb-2 mr-sm-2" id="form-modrep-voice-chara"
+          placeholder="Ex: voice_cha_qp">
+        <button type="button" class="btn btn-primary mb-2" id="b-addvoice-character">Add Character Voice</button>
+      </form>
+      <div class="mt-3 col-md-12"></div>
+      <h5>System Voice</h5>
+      <hr>
+      <form class="form-inline">
+        <input type="text" class="form-control mb-2 mr-sm-2" id="form-modrep-voice-sys"
+          placeholder="Ex: voice_sys_suguri">
+        <button type="button" class="btn btn-primary mb-2" id="b-addvoice-sys">Add System Voice</button>
+      </form>
+
+      <hr>
+
+
+      <!-- ------------------------------------------------------------------------- -->
+      <div class="mt-4 col-md-12"></div>
+      <h3>Sound Effects</h3>
+      <div class="alert alert-primary" role="alert">
+        You can replace a sound effect by adding its file name. You do not need to include .wav.
+      </div>
+
+      <form class="form-inline">
+        <input type="text" class="form-control mb-2 mr-sm-2" id="form-modrep-sound"
+          placeholder="Ex: cancel, cardget.wav">
+        <button type="button" class="btn btn-primary mb-2" id="b-addsound">Add Sound Effect</button>
+      </form>
+      <hr>
+
+
+      <!-- ------------------------------------------------------------------------- -->
+      <div class="mt-4 col-md-12"></div>
+      <h3>Character Hair Colors</h3>
+      <hr>
+
+      <form>
+        <div class="form-group row">
+          <label for="form-hair-unit" class="col-sm-2 col-form-label">Unit ID</label>
+          <div class="col-sm-10">
+            <select class="form-control" id="form-hair-unit">
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="form-hair-haircolor" class="col-sm-2 col-form-label">Hair Color</label>
+          <div class="col-sm-10">
+            <select class="form-control" id="form-hair-haircolor">
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="form-hair-technique" class="col-sm-2 col-form-label">Technique</label>
+          <div class="col-sm-10">
+            <select class="form-control" id="form-hair-technique">
+              <option>Texture</option>
+              <option>Single Color</option>
+              <option>Gradient</option>
+            </select>
+          </div>
+        </div>
+        <hr>
+
+        <!-- Hair colors -->
+        <div class="alert alert-primary" role="alert">
+          These colors are only used if you select the "Gradient" or "Single Color" technique.
+        </div>
+
+        <div class="form-group row">
+          <label for="form-hair-base" class="col-sm-2 col-form-label">Base Color </label>
+          <br>
+          <div class="col-sm-10">
+            <input type="color" id="form-hair-base" value="#FFFFFF">
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="form-hair-secondary" class="col-sm-2 col-form-label">Secondary Color (For Gradient) </label>
+          <br>
+          <div class="col-sm-10">
+            <input type="color" id="form-hair-secondary" value="#FFFFFF">
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="form-hair-shadow" class="col-sm-2 col-form-label">Shadow Color </label>
+          <br>
+          <div class="col-sm-10">
+            <input type="color" id="form-hair-shadow" value="#803232">
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="form-hair-add" class="col-sm-2 col-form-label">Glow Color (Makes hair glow/brighter)</label>
+          <br>
+          <div class="col-sm-10">
+            <input type="color" id="form-hair-add" value="#000000">
+          </div>
+        </div>
+
+        <div class="mt-4 col-md-12"></div>
+        <button type="button" class="btn btn-primary mb-2" id="b-addhair">Add Hair Color</button>
+        <p>Note: If there is an existing value for this unit, it's overwritten</p>
+
+      </form>
+
+      <hr>
+      <div class="mt-5 col-md-12"></div>
+
+
+
+      <!-- ------------------------------------------------------------------------- -->
+      <div class="mt-5 col-md-12"></div>
+      <div>
+        <h3>JSON Output</h3>
+        <p>You can copy the output below or press the "Download" button.
+          <br>Pressing "Download" will always update the JSON data first.</p>
+
+        <hr>
+        <button class="btn btn-primary" id="b-update" type="button">Update JSON</button>
+        <button class="btn btn-primary" id="b-savejson" type="button">Download JSON</button>
+
+        <hr>
+        <div class="alert alert-success" role="alert">
+          <pre id="json-result">----</pre>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <hr>
+  <!-- Footer container --->
+  <div class="container">
+
+
+
+  </div>
+
+
+
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+    integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous">
+  </script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+    integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous">
+  </script>
+  <script src="data.js"></script>
+  <script src="main.js"></script>
+
+</body>
+
+</html>
