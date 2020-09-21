@@ -229,7 +229,7 @@ $(document).ready(function () {
     var text = $("#form-modrep-texture-basic").val().toLowerCase();
     if (text.length > 0) {
       if (!textureExists(text)) {
-        modData.ModReplacements.textures.push(tex);
+        modData.ModReplacements.textures.push(text);
       }
 
       updateReplacedTextures();
