@@ -2,6 +2,8 @@
 
 [Refer to the official guide for details](https://steamcommunity.com/sharedfiles/filedetails/?id=2189405817)
 
+[View the form](https://hexundev.github.io/100oj-modgen/)
+
 Disclaimer
 
 - I am not a web dev!
