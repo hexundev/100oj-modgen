@@ -148,11 +148,11 @@ $(document).ready(function () {
     modData.ModReplacements.textures = data.ModReplacements.textures || [];
     modData.ModReplacements.music = data.ModReplacements.music || [];
     modData.ModReplacements.voices = {
-      characters: [],
+      character: [],
       system: []
     };
     if (data.ModReplacements.voices) {
-      modData.ModReplacements.voices.characters = data.ModReplacements.voices.characters || [];
+      modData.ModReplacements.voices.character = data.ModReplacements.voices.character || [];
       modData.ModReplacements.voices.system = data.ModReplacements.voices.system || [];
     }
     modData.ModReplacements.hair_color = data.ModReplacements.hair_color || [];
@@ -304,8 +304,8 @@ $(document).ready(function () {
 
   $("#b-addvoice-character").click(function () {
     var voice = $("#form-modrep-voice-chara").val().toLowerCase();
-    if (!modData.ModReplacements.voices.characters.includes(voice)) {
-      modData.ModReplacements.voices.characters.push(voice);
+    if (!modData.ModReplacements.voices.character.includes(voice)) {
+      modData.ModReplacements.voices.character.push(voice);
     }
 
     $("#form-modrep-voice-chara").val("");
