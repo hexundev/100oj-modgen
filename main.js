@@ -14,7 +14,7 @@ $(document).ready(function () {
       textures: [],
       music: [],
       voices: {
-        characters: [],
+        character: [],
         system: []
       },
       hair_color: [],
@@ -352,8 +352,9 @@ $(document).ready(function () {
     };
 
     // Overwrite if it exits
+    // Also check if it's the same hair color ID
     var index = modData.ModReplacements.hair_color.findIndex(function (value) {
-      return value.unit_id == obj.unit_id;
+      return (value.unit_id == obj.unit_id) && (value.hair_color == obj.hair_color);
     });
 
     if (index != -1) {
