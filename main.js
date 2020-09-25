@@ -280,10 +280,19 @@ $(document).ready(function () {
     var obj = {
       unit_id: $("#form-music-unit").val(),
       file: $("#form-music-file").val(),
-      loop_point: $("#form-music-loop").val(),
+      loop_point: Number($("#form-music-loop").val()),
     };
 
-    modData.ModReplacements.music.push(obj);
+    // Overwrite if it exists
+    var index = modData.ModReplacements.music.findIndex(function (value) {
+      return value.unit_id != undefined && value.unit_id == obj.unit_id;
+    });
+
+    if (index != -1) {
+      modData.ModReplacements.music[index] = obj;
+    } else {
+      modData.ModReplacements.music.push(obj);
+    }
 
     updateResult();
   });
@@ -292,10 +301,19 @@ $(document).ready(function () {
     var obj = {
       event: $("#form-eventmusic-event").val(),
       file: $("#form-eventmusic-file").val(),
-      loop_point: $("#form-eventmusic-loop").val(),
+      loop_point: Number($("#form-eventmusic-loop").val()),
     };
 
-    modData.ModReplacements.music.push(obj);
+    // Overwrite if it exists
+    var index = modData.ModReplacements.music.findIndex(function (value) {
+      return value.event != undefined && value.event == obj.event;
+    });
+
+    if (index != -1) {
+      modData.ModReplacements.music[index] = obj;
+    } else {
+      modData.ModReplacements.music.push(obj);
+    }
 
     updateResult();
   });
