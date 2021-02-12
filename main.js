@@ -72,6 +72,13 @@ $(document).ready(function () {
     var lines = data.split('\n');
   }
 
+  function numberOrDefault(value, defaultValue) {
+    if (value == "") {
+      return defaultValue;
+    }
+    return Number(value);
+  }
+
   // Copy mod definition from form
   function updateDefinition(def) {
     def.name = $('#form-modinfo-name').val();
@@ -246,7 +253,7 @@ $(document).ready(function () {
       path: $("#form-texadv-path").val(),
       face_x: Number($("#form-texadv-facex").val()),
       face_y: Number($("#form-texadv-facey").val()),
-      costume_id: $("#form-texadv-costumeid").val(),
+      costume_id: Number($("#form-texadv-costumeid").val()),
       custom_name: $("#form-texadv-cardname").val(),
       custom_flavor: $("#form-texadv-cardflavor").val(),
       single_file: $("#form-texadv-singlefile").prop("checked"),
@@ -281,6 +288,7 @@ $(document).ready(function () {
       unit_id: $("#form-music-unit").val(),
       file: $("#form-music-file").val(),
       loop_point: Number($("#form-music-loop").val()),
+      volume: numberOrDefault($("#form-music-volume").val(), 0.0)
     };
 
     // Overwrite if it exists
@@ -302,6 +310,7 @@ $(document).ready(function () {
       event: $("#form-eventmusic-event").val(),
       file: $("#form-eventmusic-file").val(),
       loop_point: Number($("#form-eventmusic-loop").val()),
+      volume: numberOrDefault($("#form-eventmusic-volume").val(), 0.0)
     };
 
     // Overwrite if it exists
@@ -361,7 +370,7 @@ $(document).ready(function () {
   $("#b-addhair").click(function () {
     var obj = {
       unit_id: $("#form-hair-unit").val(),
-      hair_color: $("#form-hair-haircolor").val(),
+      hair_color: Number($("#form-hair-haircolor").val()),
       technique: $("#form-hair-technique").val().toLowerCase().replace(' ', ''),
       base_color: $("#form-hair-base").val(),
       secondary_color: $("#form-hair-secondary").val(),
