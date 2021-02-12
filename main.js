@@ -244,8 +244,8 @@ $(document).ready(function () {
 
     var obj = {
       path: $("#form-texadv-path").val(),
-      face_x: $("#form-texadv-facex").val(),
-      face_y: $("#form-texadv-facey").val(),
+      face_x: Number($("#form-texadv-facex").val()),
+      face_y: Number($("#form-texadv-facey").val()),
       costume_id: $("#form-texadv-costumeid").val(),
       custom_name: $("#form-texadv-cardname").val(),
       custom_flavor: $("#form-texadv-cardflavor").val(),
