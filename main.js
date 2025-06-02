@@ -12,6 +12,7 @@ $(document).ready(function () {
 
     ModReplacements: {
       textures: [],
+      pets: [],
       music: [],
       voices: {
         character: [],
@@ -64,12 +65,62 @@ $(document).ready(function () {
     }
   }
 
-  function loadLegacyMod(data) {
-    if (data == undefined || data.length == 0) {
+  function loadLegacyMod(text) {
+    if (text == undefined || text.trim().length == 0) {
+      alert('Invalid legacy mod file.');
       return;
     }
 
-    var lines = data.split('\n');
+    let data = {}
+    let lines = text.trim().split(/\r?\n/)
+
+    while (lines.length > 0) {
+      if (lines[0].trim() == "") {
+        lines.shift()
+        continue
+      }
+
+      let header = readLegacyHeader(lines)
+      if (header == undefined) {
+        alert('Invalid legacy mod file.');
+        return;
+      }
+
+      let content = readLegacyValues(lines)
+      data[header] = content
+    }
+
+    if (!tv4.validate(data, legacyModSchema, false, true)) {
+      alert('Invalid legacy mod file.');
+      return;
+    }
+    
+    let mod = JSON.parse(modJSON)
+    mod.ModDefinition.name = data["MOD_NAME"][0]
+    mod.ModDefinition.author = data["MOD_AUTHOR"][0]
+    mod.ModDefinition.description = data["MOD_DESCRIPTION"][0]
+    mod.ModReplacements.textures = data["MOD_REPLACEMENTS"]
+    loadModData(mod)
+  }
+
+  function readLegacyHeader(lines) {
+    let pattern = /^< ([A-Z_]+) >$/
+    let header
+    let line = lines.shift()
+    if (line != undefined && (header = line.trim().match(pattern)[1]) == null) {
+      return undefined
+    }
+    return header
+  }
+
+  function readLegacyValues(lines) {
+    let value = []
+    let line = lines.shift()
+    while (line != undefined && line.trim() != "") {
+      value.push(line.trim())
+      line = lines.shift()
+    }
+    return value
   }
 
   function numberOrDefault(value, defaultValue) {
@@ -133,12 +184,7 @@ $(document).ready(function () {
 
 
   function loadModData(data) {
-    if (data == undefined) {
-      return;
-    }
-
-    // Check if it's a mod JSON file
-    if (data.ModDefinition == undefined || data.ModReplacements == undefined) {
+    if (!tv4.validate(data, modSchema, false, true)) {
       alert('Invalid mod file.');
       return;
     }
