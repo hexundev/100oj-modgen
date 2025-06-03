@@ -43,15 +43,6 @@ $(document).ready(function () {
     fr.readAsText(path);
   }
 
-  function isJson(str) {
-    try {
-      JSON.parse(str);
-    } catch (e) {
-      return false;
-    }
-    return true;
-  }
-
   function isTextureObj(tex) {
     return tex != undefined && (typeof tex === 'object');
   }
@@ -189,32 +180,39 @@ $(document).ready(function () {
       return;
     }
 
-    // Copy mod definition to form
-    $('#form-modinfo-name').val(data.ModDefinition.name);
-    $('#form-modinfo-description').val(data.ModDefinition.description);
-    $('#form-modinfo-author').val(data.ModDefinition.author);
-    $('#form-modinfo-changelog').val(data.ModDefinition.changelog);
-    $('#form-modinfo-contest').prop('checked', data.ModDefinition.contest);
-    $('#form-modinfo-color').val(data.ModDefinition.color);
+    // Copy mod definitions
+    modData.ModDefinition.name = data.ModDefinition.name
+    modData.ModDefinition.author = data.ModDefinition.author
+    modData.ModDefinition.description = data.ModDefinition.description
+    modData.ModDefinition.changelog = data.ModDefinition.changelog || ""
+    modData.ModDefinition.contest = data.ModDefinition.contest || false
+    modData.ModDefinition.color = data.ModDefinition.color || "#ffbc5e"
 
     // Copy mod replacements
-    modData.ModReplacements.textures = data.ModReplacements.textures || [];
-    modData.ModReplacements.music = data.ModReplacements.music || [];
-    modData.ModReplacements.voices = {
-      character: [],
-      system: []
-    };
-    if (data.ModReplacements.voices) {
-      modData.ModReplacements.voices.character = data.ModReplacements.voices.character || [];
-      modData.ModReplacements.voices.system = data.ModReplacements.voices.system || [];
-    }
-    modData.ModReplacements.hair_color = data.ModReplacements.hair_color || [];
-    modData.ModReplacements.sound_effects = data.ModReplacements.sound_effects || [];
+    modData.ModReplacements.textures = (data.ModReplacements || {}).textures || []
+    modData.ModReplacements.pets = (data.ModReplacements || {}).pets || []
+    modData.ModReplacements.music = (data.ModReplacements || {}).music || []
+    modData.ModReplacements.voices = (data.ModReplacements || {}).voices || {}
+    modData.ModReplacements.voices.system = ((data.ModReplacements || {}).voices || {}).system || []
+    modData.ModReplacements.voices.character = ((data.ModReplacements || {}).voices || {}).character || []
+    modData.ModReplacements.sound_effects = (data.ModReplacements || {}).sound_effects || [];
+    modData.ModReplacements.hair_color = (data.ModReplacements || {}).hair_color || [];
+    
+    updateForm()
 
     // Update output
     updateResult();
   };
 
+  function updateForm() {
+    // Copy mod definition to form
+    $('#form-modinfo-name').val(modData.ModDefinition.name);
+    $('#form-modinfo-description').val(modData.ModDefinition.description);
+    $('#form-modinfo-author').val(modData.ModDefinition.author);
+    $('#form-modinfo-changelog').val(modData.ModDefinition.changelog);
+    $('#form-modinfo-contest').prop('checked', modData.ModDefinition.contest);
+    $('#form-modinfo-color').val(modData.ModDefinition.color);
+  }
 
   $('#b-loadjson').click(function () {
     $('#file-json').trigger('click');
@@ -225,7 +223,8 @@ $(document).ready(function () {
   });
 
   $('#b-reset').click(function () {
-    loadModData(JSON.parse(modJSON));
+    modData = JSON.parse(modJSON)
+    updateForm()
   });
 
   $("#file-json").change(function () {
@@ -235,10 +234,10 @@ $(document).ready(function () {
     }
 
     readFile(files[0], function (result) {
-      if (isJson(result)) {
+      try {
         loadModData(JSON.parse(result));
-      } else {
-        alert("Could not load JSON file.");
+      } catch (e) {
+        alert("Could not load JSON file.")
       }
     });
   });
