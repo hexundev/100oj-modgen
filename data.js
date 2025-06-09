@@ -1,3 +1,7 @@
+const costumeIds = 12
+
+const hairColors = 12
+
 const unitNames = ["alicianrone","alte","arnelle","arthur","aru","arus","ball","balloonjerk","bball","bchicken","blob","bourbon",
 "bpoppo","bqp","brobo","castle","ceor","chef","chicken","chris","chuu","cook","cuties","cuties_sora","doll",
 "ellie","elliehyper","evilguardian","evilmousse","fae","fernet","fernetnoble","fluff","ghost","goalpost","golem",
