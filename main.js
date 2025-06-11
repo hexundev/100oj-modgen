@@ -6,12 +6,14 @@ $(document).ready(function () {
       author: "",
       system_version: 2,
       changelog: "",
-      contest: false,
-      color: "#ffbc5e"
+      mod_version: "",
+      color: "#ffbc5e",
+      contest: false
     },
 
     ModReplacements: {
       textures: [],
+      pets: [],
       music: [],
       voices: {
         character: [],
@@ -42,18 +44,93 @@ $(document).ready(function () {
     fr.readAsText(path);
   }
 
-  function isJson(str) {
-    try {
-      JSON.parse(str);
-    } catch (e) {
-      return false;
+  function loadLegacyMod(text) {
+    if (text == undefined || text.trim().length == 0) {
+      alert('Invalid legacy mod file.');
+      return;
     }
-    return true;
+
+    let data = {}
+    let lines = text.trim().split(/\r?\n/)
+
+    while (lines.length > 0) {
+      if (lines[0].trim() == "") {
+        lines.shift()
+        continue
+      }
+
+      let header = readLegacyHeader(lines)
+      if (header == undefined) {
+        alert('Invalid legacy mod file.');
+        return;
+      }
+
+      let content = readLegacyValues(lines)
+      data[header] = content
+    }
+
+    if (!tv4.validate(data, legacyModSchema, false, true)) {
+      alert('Invalid legacy mod file.');
+      return;
+    }
+    
+    let mod = JSON.parse(modJSON)
+    mod.ModDefinition.name = data["MOD_NAME"][0]
+    mod.ModDefinition.author = data["MOD_AUTHOR"][0]
+    mod.ModDefinition.description = data["MOD_DESCRIPTION"][0]
+    mod.ModReplacements.textures = data["MOD_REPLACEMENTS"]
+    loadModData(mod)
   }
 
-  function isTextureObj(tex) {
-    return tex != undefined && (typeof tex === 'object');
+  function readLegacyHeader(lines) {
+    let pattern = /^< ([A-Z_]+) >$/
+    let header
+    let line = lines.shift()
+    if (line != undefined && (header = line.trim().match(pattern)[1]) == null) {
+      return undefined
+    }
+    return header
   }
+
+  function readLegacyValues(lines) {
+    let value = []
+    let line = lines.shift()
+    while (line != undefined && line.trim() != "") {
+      value.push(line.trim())
+      line = lines.shift()
+    }
+    return value
+  }
+
+  function loadModData(data) {
+    if (!tv4.validate(data, modSchema, false, true)) {
+      alert('Invalid mod file.');
+      return;
+    }
+
+    // Copy mod definitions
+    modData.ModDefinition.name = data.ModDefinition.name
+    modData.ModDefinition.author = data.ModDefinition.author
+    modData.ModDefinition.description = data.ModDefinition.description
+    modData.ModDefinition.changelog = data.ModDefinition.changelog || ""
+    modData.ModDefinition.contest = data.ModDefinition.contest || false
+    modData.ModDefinition.color = data.ModDefinition.color || "#ffbc5e"
+
+    // Copy mod replacements
+    modData.ModReplacements.textures = (data.ModReplacements || {}).textures || []
+    modData.ModReplacements.pets = (data.ModReplacements || {}).pets || []
+    modData.ModReplacements.music = (data.ModReplacements || {}).music || []
+    modData.ModReplacements.voices = (data.ModReplacements || {}).voices || {}
+    modData.ModReplacements.voices.system = ((data.ModReplacements || {}).voices || {}).system || []
+    modData.ModReplacements.voices.character = ((data.ModReplacements || {}).voices || {}).character || []
+    modData.ModReplacements.sound_effects = (data.ModReplacements || {}).sound_effects || [];
+    modData.ModReplacements.hair_color = (data.ModReplacements || {}).hair_color || [];
+    
+    updateForm()
+
+    // Update output
+    updateResult();
+  };
 
   function showError(elem, err) {
     if (err == undefined || err.length == 0) {
@@ -64,19 +141,21 @@ $(document).ready(function () {
     }
   }
 
-  function loadLegacyMod(data) {
-    if (data == undefined || data.length == 0) {
-      return;
-    }
-
-    var lines = data.split('\n');
-  }
-
   function numberOrDefault(value, defaultValue) {
     if (value == "") {
       return defaultValue;
     }
     return Number(value);
+  }
+  
+  // Copy mod definition to form
+  function updateForm() {
+    $('#form-modinfo-name').val(modData.ModDefinition.name);
+    $('#form-modinfo-description').val(modData.ModDefinition.description);
+    $('#form-modinfo-author').val(modData.ModDefinition.author);
+    $('#form-modinfo-changelog').val(modData.ModDefinition.changelog);
+    $('#form-modinfo-contest').prop('checked', modData.ModDefinition.contest);
+    $('#form-modinfo-color').val(modData.ModDefinition.color);
   }
 
   // Copy mod definition from form
@@ -113,63 +192,28 @@ $(document).ready(function () {
     $("#form-modrep-textures").html(text);
   }
 
+  function isTextureObj(tex) {
+    return tex != undefined && (typeof tex === 'object');
+  }
+
   // Textures can be a string or object
   function getTextureIndex(tex) {
-    var isObj = isTextureObj(tex);
+    var path = tex
+    if (isTextureObj(tex)) {
+      path = tex.path
+    }
     var index = modData.ModReplacements.textures.findIndex(t => {
       // Compare path
-      if (isObj) {
-        return isTextureObj(t) && t.path == tex.path;
+      if (isTextureObj(t)) {
+        return t.path == tex.path;
       }
       // Compare name
-      return !isTextureObj(t) && tex == t;
+      return path == t;
     });
     return index;
   }
 
-  function textureExists(tex) {
-    return getTextureIndex(tex) >= 0;
-  }
-
-
-  function loadModData(data) {
-    if (data == undefined) {
-      return;
-    }
-
-    // Check if it's a mod JSON file
-    if (data.ModDefinition == undefined || data.ModReplacements == undefined) {
-      alert('Invalid mod file.');
-      return;
-    }
-
-    // Copy mod definition to form
-    $('#form-modinfo-name').val(data.ModDefinition.name);
-    $('#form-modinfo-description').val(data.ModDefinition.description);
-    $('#form-modinfo-author').val(data.ModDefinition.author);
-    $('#form-modinfo-changelog').val(data.ModDefinition.changelog);
-    $('#form-modinfo-contest').prop('checked', data.ModDefinition.contest);
-    $('#form-modinfo-color').val(data.ModDefinition.color);
-
-    // Copy mod replacements
-    modData.ModReplacements.textures = data.ModReplacements.textures || [];
-    modData.ModReplacements.music = data.ModReplacements.music || [];
-    modData.ModReplacements.voices = {
-      character: [],
-      system: []
-    };
-    if (data.ModReplacements.voices) {
-      modData.ModReplacements.voices.character = data.ModReplacements.voices.character || [];
-      modData.ModReplacements.voices.system = data.ModReplacements.voices.system || [];
-    }
-    modData.ModReplacements.hair_color = data.ModReplacements.hair_color || [];
-    modData.ModReplacements.sound_effects = data.ModReplacements.sound_effects || [];
-
-    // Update output
-    updateResult();
-  };
-
-
+  // Events
   $('#b-loadjson').click(function () {
     $('#file-json').trigger('click');
   });
@@ -179,7 +223,11 @@ $(document).ready(function () {
   });
 
   $('#b-reset').click(function () {
-    loadModData(JSON.parse(modJSON));
+    $('form').each(function (i, form) {
+      form.reset()
+    })
+    modData = JSON.parse(modJSON)
+    updateResult()
   });
 
   $("#file-json").change(function () {
@@ -189,10 +237,10 @@ $(document).ready(function () {
     }
 
     readFile(files[0], function (result) {
-      if (isJson(result)) {
+      try {
         loadModData(JSON.parse(result));
-      } else {
-        alert("Could not load JSON file.");
+      } catch (e) {
+        alert("Could not load JSON file.")
       }
     });
   });
@@ -208,6 +256,7 @@ $(document).ready(function () {
     });
   });
 
+  // TODO: Replace?
   $("#b-update").click(function () {
     updateResult();
   });
@@ -219,74 +268,63 @@ $(document).ready(function () {
     download(text, 'mod.json', 'application/json');
   });
 
-
-  $("#form-modinfo-color").change(function () {
-    modData.ModDefinition.color = $("#form-modinfo-color").val();
-
-    updateResult();
-  });
-
-
-  $("#form-texture-basic").onsubmit = (function () {
+  $("form").onsubmit = (function () {
     console.log("owo");
     return false;
   });
 
-  $("#b-addtexture-basic").click(function () {
-    var text = $("#form-modrep-texture-basic").val().toLowerCase();
-    if (text.length > 0) {
-      if (!textureExists(text)) {
-        modData.ModReplacements.textures.push(text);
-      }
-
-      updateReplacedTextures();
-      updateResult();
+  $("#b-addtexture").click(function () {
+    var path = $("#form-texadv-path").val()
+    if (path.length <= 0) {
+      return
     }
 
-    $("#form-modrep-texture-basic").val("");
-  });
+    var isAdv = $("#cb-textadv-opts").prop("checked")
+    var isUnit = $("#r-tex-type-unit").prop("checked")
+    var isCard = $("#r-tex-type-card").prop("checked")
 
-
-  $("#b-addtexture-advanced").click(function () {
-
-    var obj = {
-      path: $("#form-texadv-path").val(),
-      face_x: Number($("#form-texadv-facex").val()),
-      face_y: Number($("#form-texadv-facey").val()),
-      costume_id: Number($("#form-texadv-costumeid").val()),
-      custom_name: $("#form-texadv-cardname").val(),
-      custom_flavor: $("#form-texadv-cardflavor").val(),
-      single_file: $("#form-texadv-singlefile").prop("checked"),
-    };
+    switch (true) {
+      case isAdv && isUnit:
+        tex = {
+          path: path,
+          face_x: Number($("#form-texadv-facex").val()),
+          face_y: Number($("#form-texadv-facey").val()),
+          costume_id: Number($("#form-texadv-costumeid").val()),
+          single_file: $("#form-texadv-singlefile").prop("checked")
+        }
+        break
+      case isAdv && isCard:
+        tex = {
+          path: path,
+          custom_name: $("#form-texadv-cardname").val(),
+          custom_flavor: $("#form-texadv-cardflavor").val()
+        }
+        break
+      default:
+        tex = path
+    }
 
     // Overwrite if it exits
-    var index = getTextureIndex(obj);
-    if (index == -1) {
-      modData.ModReplacements.textures.push(obj);
+    var index = getTextureIndex(tex)
+    if (index != -1) {
+      modData.ModReplacements.textures[index] = tex
     } else {
-      modData.ModReplacements.textures[index] = obj;
+      modData.ModReplacements.textures.push(tex)
     }
 
-    updateReplacedTextures();
-    updateResult();
+    updateResult()
+    $("#s-modrep-textures form").get(0).reset()
   });
-
-  $("#b-addtexture-clear").click(function () {
-    $("#form-texadv-path").val("");
-    $("#form-texadv-facex").val("");
-    $("#form-texadv-facey").val("");
-    $("#form-texadv-costumeid").val(0);
-    $("#form-texadv-cardname").val("");
-    $("#form-texadv-cardflavor").val("");
-    $("#form-texadv-singlefile").prop("checked", false);
-  });
-
-
 
   $("#b-addmusic").click(function () {
+    var path = $("#form-music-file").val()
+    if (path.length <= 0) {
+      return
+    }
+    
     var obj = {
+      file: path,
       unit_id: $("#form-music-unit").val(),
-      file: $("#form-music-file").val(),
       loop_point: Number($("#form-music-loop").val()),
       volume: numberOrDefault($("#form-music-volume").val(), 0.0)
     };
@@ -303,12 +341,18 @@ $(document).ready(function () {
     }
 
     updateResult();
+    $("#s-modrep-music-cha form").get(0).reset()
   });
 
   $("#b-addeventmusic").click(function () {
+    var path = $("#form-eventmusic-file").val()
+    if (path.length <= 0) {
+      return
+    }
+
     var obj = {
+      file: path,
       event: $("#form-eventmusic-event").val(),
-      file: $("#form-eventmusic-file").val(),
       loop_point: Number($("#form-eventmusic-loop").val()),
       volume: numberOrDefault($("#form-eventmusic-volume").val(), 0.0)
     };
@@ -325,12 +369,15 @@ $(document).ready(function () {
     }
 
     updateResult();
+    $("#s-modrep-music-ev form").get(0).reset()
   });
 
-
-
   $("#b-addvoice-character").click(function () {
-    var voice = $("#form-modrep-voice-chara").val().toLowerCase();
+    var voice = $("#form-modrep-voice-chara").val().toLowerCase()
+    if (voice.length <= 0) {
+      return
+    }
+
     if (!modData.ModReplacements.voices.character.includes(voice)) {
       modData.ModReplacements.voices.character.push(voice);
     }
@@ -341,6 +388,10 @@ $(document).ready(function () {
 
   $("#b-addvoice-sys").click(function () {
     var voice = $("#form-modrep-voice-sys").val().toLowerCase();
+    if (voice.length <= 0) {
+      return
+    }
+
     if (!modData.ModReplacements.voices.system.includes(voice)) {
       modData.ModReplacements.voices.system.push(voice);
     }
@@ -350,10 +401,15 @@ $(document).ready(function () {
   });
 
   $("#b-addsound").click(function () {
-    var sound = $("#form-modrep-sound").val().toLowerCase();
+    var sound = $("#form-modrep-sound").val().toLowerCase()
+    if (sound.length <= 0) {
+      return
+    }
+    
     if (!sound.includes(".wav")) {
       sound += ".wav";
     }
+
     if (!modData.ModReplacements.sound_effects.includes(sound)) {
       modData.ModReplacements.sound_effects.push(sound);
     }
@@ -361,11 +417,6 @@ $(document).ready(function () {
     $("#form-modrep-sound").val("");
     updateResult();
   });
-
-
-
-
-
 
   $("#b-addhair").click(function () {
     var obj = {
@@ -393,10 +444,9 @@ $(document).ready(function () {
     updateResult();
   });
 
-
   function addHairColorOptions() {
     var list = $("#form-hair-haircolor");
-    for (var i = 1; i <= 12; ++i) {
+    for (var i = 1; i <= hairColors; ++i) {
       list.append("<option>" + i + "</option>");
     }
   }
@@ -421,7 +471,7 @@ $(document).ready(function () {
 
   function addCostumeOptions() {
     var list = $("#form-texadv-costumeid");
-    for (var i = 0; i <= 10; ++i) {
+    for (var i = 0; i <= costumeIds; ++i) {
       list.append("<option>" + i + "</option>");
     }
   }

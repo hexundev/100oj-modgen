@@ -7,10 +7,48 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-    integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+    integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous"
+    referrerpolicy="no-referrer" />
 
   <title>100% Orange Juice Mod Generator</title>
+
+  <!-- Custom Styles -->
+  <style>
+    .collapse-header {
+      cursor: pointer;
+    }
+
+    .collapse-icon {
+      transition: transform 0.3s ease;
+    }
+
+    .collapsed .collapse-icon {
+      transform: rotate(-90deg);
+    }
+
+    .expandable {
+      display: none;
+    }
+
+    #s-texbas:has(#cb-textadv-opts:checked) ~ #s-texadv {
+      display: initial;
+    }
+
+    #s-texadv:has(#r-tex-type-unit:checked) #s-texadv-unit {
+      display: initial;
+    }
+
+    #s-texadv:has(#r-tex-type-card:checked) #s-texadv-card {
+      display: initial;
+    }
+
+    #s-modrep-hair:has(#form-hair-technique option[data-hair-type="adv"]:checked) #s-hairadv {
+      display: initial;
+    } 
+  </style>
 </head>
 
 <body>
@@ -21,7 +59,7 @@
     <img src="img/100ojmod.png" class="rounded mx-auto d-block" alt="100% Modding Juice Logo">
 
     <div class="alert alert-primary" role="alert">      
-      Last Updated - 11/02/2021
+      Last Updated - 10/06/2025
       <hr>
       View the 100% Orange Juice full modding guide <a
         href="https://steamcommunity.com/sharedfiles/filedetails/?id=2189405817" class="alert-link">here</a>.
@@ -32,7 +70,6 @@
       You can also join our <a href="https://discord.com/invite/fruitbatfactory" class="alert-link">Discord server</a>
       where you can
       discuss in our modding channel!
-     
     </div>
 
     <div class="alert alert-secondary" role="alert">
@@ -50,430 +87,486 @@
     </div>
 
     <h3>Load Mod</h3>
-    <p>In the future you'll be able to load legacy mods.</p>
     <input type="file" id="file-txt" accept=".txt" style="display:none">
     <input type="file" id="file-json" accept=".json" style="display:none">
     <button class="btn btn-primary" id="b-loadjson" type="button">Load JSON</button>
+    <button class="btn btn-primary" id="b-loadtxt" type="button">Load TXT (Legacy)</button>
     <button class="btn btn-primary" id="b-reset" type="button">Reset Form</button>
     <hr>
 
     <div class="mt-5 col-md-12"></div>
 
-    <h2>Mod Definition</h2>
-    <div class="mt-5 col-md-12"></div>
+    <div class="row">
+      <!-- Left Pannel -->
+      <div class="col-md-6">
 
-    <div>
-      <h3>Basic Information</h3>
-      <div class="mt-4 col-md-12"></div>
-
-      <form>
-        <div class="form-group row">
-          <label for="form-modinfo-name" class="col-sm-2 col-form-label">Mod Name</label>
-          <div class="col-sm-10">
-            <input type="text" class="form-control" id="form-modinfo-name" placeholder="Ex: My first mod" required>
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <label for="form-modinfo-description" class="col-sm-2 col-form-label">Mod Description</label>
-          <div class="col-sm-10">
-            <textarea class="form-control" id="form-modinfo-description" rows="3"
-              placeholder="Ex: Makes Poppo huge."></textarea>
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <label for="form-modinfo-author" class="col-sm-2 col-form-label">Author</label>
-          <div class="col-sm-10">
-            <input type="text" class="form-control" id="form-modinfo-author" placeholder="Ex: Kai" required>
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <label for="form-modinfo-sysversion" class="col-sm-2 col-form-label">System Version</label>
-          <div class="col-sm-10">
-            <input type="text" class="form-control" id="form-modinfo-sysversion" readonly value="2" required>
-          </div>
-        </div>
-
-        <!-- Optional Data -->
-        <div class="form-group row">
-          <label for="form-modinfo-changelog" class="col-sm-2 col-form-label">Changelog (Optional)</label>
-          <div class="col-sm-10">
-            <textarea class="form-control" id="form-modinfo-changelog" rows="4"></textarea>
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <label for="form-modinfo-color" class="col-sm-2 col-form-label">Mod Box Color (Optional)</label>
-          <br>
-          <div class="col-sm-10">
-            <input type="color" id="form-modinfo-color" value="#FFBC5E">
-          </div>
-        </div>
-
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" id="form-modinfo-contest">
-          <label class="form-check-label" for="form-modinfo-contest">
-            Contest Entry? (Optional: Only used for contests)
-          </label>
-        </div>
-
-      </form>
-      <div class="mt-5 col-md-12"></div>
-
-      <h3>Mod replacements</h3>
-      <p> The sections below include various things you can replace.
-        Your mod can include many kinds of replacements such as textures, music, voices and so on.
-        You do not need to fill in each section, only the one(s) you want.</p>
-      <div class="mt-4 col-md-12"></div>
-
-      <!-- ------------------------------------------------------------------------- -->
-      <h3>Textures</h3>
-      <!--<div>
-        <h5>Textures List</h5>
-        <div class="alert alert-secondary" role="alert" id="form-modrep-textures">
-        </div>
-      </div> -->
-      <hr>
-
-      <h5>Add a Texture (Basic)</h5>
-      <div class="alert alert-primary" role="alert">
-        For units you can specify all poses or a single one.
-        <br>Examples:<br>
-        units/cuties_00 replaces all poses (cuties_00_00 to cuties_00_05)
-        <br>
-        units/cuties_00_01 only replaces this pose.
-      </div>
-      <hr>
-
-      <form class="form-inline">
-        <label class="sr-only" for="form-modrep-texture-basic">Path</label>
-        <input type="text" class="form-control mb-2 mr-sm-2" id="form-modrep-texture-basic"
-          placeholder="Ex: units/sora_00">
-
-        <button type="button" class="btn btn-primary mb-2" id="b-addtexture-basic">Add Texture</button>
-      </form>
-
-      <div class="mt-3 col-md-12"></div>
-      <br>
-      <h5>Add a Texture (Advanced)</h5>
-      <hr>
-
-      <form>
-        <div class="form-group row">
-          <label for="form-texadv-path" class="col-sm-2 col-form-label">Path</label>
-          <div class="col-sm-10">
-            <input type="text" class="form-control" id="form-texadv-path"
-              placeholder="Ex: units/cuties_03_01 cards/cuties" required>
-          </div>
-        </div>
-
-        <p>Face Coordinates (0-256 for each)</p>
-        <div class="form-group row">
-          <label for="form-texadv-facex" class="col-sm-2 col-form-label">X</label>
-          <div class="col-sm-10">
-            <input type="text" class="form-control" id="form-texadv-facex" placeholder="Ex: 128">
-          </div>
-          <label for="form-texadv-facey" class="col-sm-2 col-form-label">Y</label>
-          <div class="col-sm-10">
-            <input type="text" class="form-control" id="form-texadv-facey" placeholder="Ex: 255">
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <label for="form-texadv-costumeid" class="col-sm-2 col-form-label">Costume ID</label>
-          <div class="col-sm-10">
-            <select class="form-control" id="form-texadv-costumeid">
-            </select>
-          </div>
-        </div>
-        <hr>
-        <div class="form-group row">
-          <label for="form-texadv-cardname" class="col-sm-2 col-form-label">Custom Name (Cards Only)</label>
-          <div class="col-sm-10">
-            <input type="text" class="form-control" id="form-texadv-cardname" placeholder="Ex: My Cool Card" required>
-          </div>
-        </div>
-        <div class="form-group row">
-          <label for="form-texadv-cardflavor" class="col-sm-2 col-form-label">Custom Flavor Text (Cards Only)</label>
-          <div class="col-sm-10">
-            <input type="text" class="form-control" id="form-texadv-cardflavor" placeholder="Ex: Po -Poppo" required>
-          </div>
-        </div>
-
-        <hr>
-        <div class="form-check row">
-          <div class="col-sm-10">
-            <input class="form-check-input" type="checkbox" value="" id="form-texadv-singlefile">
-            <label class="form-check-label" for="form-texadv-singlefile">
-              Single File Replacement (If you only want to replace 1 pose Ex: cuties_00_01)
-            </label>
-          </div>
+        <!-- Mod Definition Section -->
+        <div class="collapse-header" data-toggle="collapse" data-target="#s-mod-definition">
+          <h3>Basic Information <i class="fa-solid fa-caret-down fa-sm collapse-icon"></i></h3>
         </div>
         <div class="mt-4 col-md-12"></div>
 
-        <button type="button" class="btn btn-primary mb-2" id="b-addtexture-advanced">Add Texture</button>
-        <button type="button" class="btn btn-primary mb-2" id="b-addtexture-clear">Clear</button>
-      </form>
+        <div id="s-mod-definition" class="collapse show">
+          <form>
+            <div class="form-group row">
+              <label for="form-modinfo-name" class="col-sm-3 col-form-label">Mod Name</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="form-modinfo-name" placeholder="Ex: My first mod" required>
+              </div>
+            </div>
 
-      <!-- ------------------------------------------------------------------------- -->
-      <div class="mt-4 col-md-12"></div>
-      <h3>Music</h3>
-      <hr>
+            <div class="form-group row">
+              <label for="form-modinfo-description" class="col-sm-3 col-form-label">Mod Description</label>
+              <div class="col-sm-9">
+                <textarea class="form-control" id="form-modinfo-description" rows="3"
+                  placeholder="Ex: Makes Poppo huge."></textarea>
+              </div>
+            </div>
 
-      <div class="alert alert-primary" role="alert">
-        You can replace character music or music used for events, see the guide for more info.
-      </div>
+            <div class="form-group row">
+              <label for="form-modinfo-author" class="col-sm-3 col-form-label">Author</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="form-modinfo-author" placeholder="Ex: Kai" required>
+              </div>
+            </div>
 
-      <h4>Character Music</h4>
-      <form>
-        <div class="form-group row">
-          <label for="form-music-unit" class="col-sm-2 col-form-label">Unit ID</label>
-          <div class="col-sm-10">
-            <select class="form-control" id="form-music-unit">
-            </select>
-          </div>
+            <div class="form-group row">
+              <label for="form-modinfo-sysversion" class="col-sm-3 col-form-label">System Version</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="form-modinfo-sysversion" readonly value="2" required>
+              </div>
+            </div>
+
+            <!-- Optional Data -->
+            <div class="form-group row">
+              <label for="form-modinfo-changelog" class="col-sm-3 col-form-label">
+                Changelog
+                <small class="form-text text-muted"> (Optional)</small>
+              </label>
+              <div class="col-sm-9">
+                <textarea class="form-control" id="form-modinfo-changelog" rows="4"></textarea>
+              </div>
+            </div>
+
+            <div class="form-group row align-items-center">
+              <label for="form-modinfo-color" class="col-sm-3 col-form-label">
+                Mod Box Color
+                <small class="form-text text-muted"> (Optional)</small>
+              </label>
+              <div class="col-sm-1">
+                <input class="" type="color" id="form-modinfo-color" value="#FFBC5E">
+              </div>
+            </div>
+
+            <div class="form-group row align-items-center">
+              <label for="form-modinfo-contest" class="col-sm-3 col-form-label">
+                Contest Entry?
+                <small class="form-text text-muted"> (Optional)</small>
+              </label>
+              <div class="col-sm-1">
+                <input class="form-check-inline" type="checkbox" value="" id="form-modinfo-contest">
+              </div>
+            </div>
+
+          </form>
+          <div class="mt-5 col-md-12"></div>
         </div>
 
-        <div class="form-group row">
-          <label for="form-music-file" class="col-sm-2 col-form-label">File</label>
-          <div class="col-sm-10">
-            <input type="text" class="form-control" id="form-music-file" placeholder="Ex: music/grayhued" required>
-          </div>
+        <!-- Mod Replacements Section -->
+        <div class="collapse-header" data-toggle="collapse" data-target="#s-modreplacements">
+          <h3>Replacements <i class="fa-solid fa-caret-down fa-sm collapse-icon"></i></h3>
         </div>
-
-        <div class="form-group row">
-          <label for="form-music-loop" class="col-sm-2 col-form-label">Loop Point (Optional)</label>
-          <div class="col-sm-10">
-            <input type="text" class="form-control" id="form-music-loop" placeholder="Ex: 796411">
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <label for="form-music-volume" class="col-sm-2 col-form-label">Volume Change (Optional)</label>
-          <div class="col-sm-10">
-            <input type="text" class="form-control" id="form-music-volume" placeholder="Ex: 3.0 means increase volume by this amount">
-          </div>
-        </div>
-
+        <p> The sections below include various things you can replace.
+          Your mod can include many kinds of replacements such as textures, music, voices and so on.
+          You do not need to fill in each section, only the one(s) you want.</p>
         <div class="mt-4 col-md-12"></div>
 
-        <button type="button" class="btn btn-primary mb-2" id="b-addmusic">Add Character Music</button>
+        <div id="s-modreplacements" class="collapse show">
 
-      </form>
+          <!-- Texture Replacements -->
+          <div class="collapse-header" data-toggle="collapse" data-target="#s-modrep-textures">
+            <h4>Textures <i class="fa-solid fa-caret-down fa-sm collapse-icon"></i></h4>
+          </div>
+          <hr>
 
-      <div class="mt-4 col-md-12"></div>
-      <hr>
+          <div id="s-modrep-textures" class="collapse show">
+            <div class="alert alert-primary" role="alert">
+              For units you can specify all poses or a single one.
+              <br>Examples:<br>
+              units/cuties_00 replaces all poses (cuties_00_00 to cuties_00_05)
+              <br>
+              units/cuties_00_01 only replaces this pose.
+            </div>
 
-      <h4>Event Music</h4>
-      <form>
-        <div class="form-group row">
-          <label for="form-eventmusic-event" class="col-sm-2 col-form-label">Event Name</label>
-          <div class="col-sm-10">
-            <select class="form-control" id="form-eventmusic-event">
-            </select>
+            <form>
+
+              <!-- Basic Texture -->
+              <div id="s-texbas">
+                <div class="form-group row">
+                  <label for="form-texadv-path" class="col-sm-1 col-form-label">Path</label>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control" id="form-texadv-path"
+                      placeholder="Ex: units/sora_00" required>
+                  </div>
+                </div>
+                <div class="form-group row align-items-center">
+                  <div class="col-sm-1">
+                    <input class="form-check-inline" type="checkbox" id="cb-textadv-opts">
+                  </div>
+                  <label class="form-check-label" for="cb-textadv-opts">Show advanced texture options</label>
+                </div>
+              </div>
+
+              <!-- Advanced Texture -->
+              <div id="s-texadv" class="expandable">
+
+                <div class="form-group row align-items-center">
+
+                  <div class="col-sm-12">
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="r-tex-type" id="r-tex-type-unit" value="unit">
+                      <label class="form-check-label" for="r-tex-type-unit">Unit</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="r-tex-type" id="r-tex-type-card" value="card">
+                      <label class="form-check-label" for="r-tex-type-card">Card</label>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div id="s-texadv-unit" class="expandable">
+                  <h5>For Units Only</h5>
+                  <div class="mt-3 col-md-12"></div>
+                  <div class="form-group row mb-1">
+                    <label for="form-texadv-facex" class="col-sm-2 col-form-label">Face X</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="form-texadv-facex" placeholder="Ex: 128 (0-256)">
+                    </div>
+                  </div>
+                  <div class="form-group row mb-1">
+                    <label for="form-texadv-facey" class="col-sm-2 col-form-label">Face Y</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="form-texadv-facey" placeholder="Ex: 255 (0-256)">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="form-texadv-costumeid" class="col-sm-2 col-form-label">Costume</label>
+                    <div class="col-sm-10">
+                      <select class="form-control" id="form-texadv-costumeid">
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group row align-items-center">
+                    <div class="col-sm-1">
+                      <input class="form-check-inline" type="checkbox" id="form-texadv-singlefile">
+                    </div>
+                    <label class="form-check-label" for="form-texadv-singlefile">Single File Replacement</label>
+                  </div>
+                </div>
+              
+                <div id="s-texadv-card" class="expandable">
+                  <h5>For Cards only</h5>
+                  <div class="mt-3 col-md-12"></div>
+                  <div class="form-group row mb-1">
+                    <label for="form-texadv-cardname" class="col-sm-3 col-form-label">Custom Name</label>
+                    <div class="col-sm-9">
+                      <input type="text" class="form-control" id="form-texadv-cardname" placeholder="Ex: My Cool Card" required>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="form-texadv-cardflavor" class="col-sm-3 col-form-label">Flavor Text</label>
+                    <div class="col-sm-9">
+                      <input type="text" class="form-control" id="form-texadv-cardflavor" placeholder="Ex: Po -Poppo" required>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <button type="button" class="btn btn-primary mb-2" id="b-addtexture">Add Texture</button>
+            </form>
+            <div class="mt-4 col-md-12"></div>
+          </div>
+
+          <!-- Music Replacements -->
+          <div class="collapse-header" data-toggle="collapse" data-target="#s-modrep-music">
+            <h4>Music <i class="fa-solid fa-caret-down fa-sm collapse-icon"></i></h4>
+          </div>
+          <hr>
+
+          <div id="s-modrep-music" class="collapse show">
+            <div class="alert alert-primary" role="alert">
+              You can replace character and/or event music in this section. See the guide for more information.
+            </div>
+
+            <div class="collapse-header" data-toggle="collapse" data-target="#s-modrep-music-cha">
+              <h5>Character Music <i class="fa-solid fa-caret-down fa-sm collapse-icon"></i></h5>
+            </div>
+            <div class="mt-3 col-md-12"></div>
+            
+            <div id="s-modrep-music-cha" class="collapse show">
+              <form>
+                <div class="form-group row">
+                  <label for="form-music-unit" class="col-sm-3 col-form-label">Unit ID</label>
+                  <div class="col-sm-9">
+                    <select class="form-control" id="form-music-unit">
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="form-music-file" class="col-sm-3 col-form-label">File</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" id="form-music-file" placeholder="Ex: music/grayhued" required>
+                  </div>
+                </div>
+
+                <div class="form-group row align-items-center">
+                  <div class="col-sm-3">
+                    <label for="form-music-loop" class="col-form-label">
+                      Loop Point
+                      <small class="form-text text-muted"> (Optional)</small>
+                    </label>
+                  </div>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" id="form-music-loop" placeholder="Ex: 796411">
+                  </div>
+                </div>
+
+                <div class="form-group row align-items-center">
+                  <div class="col-sm-3 ">
+                    <label for="form-music-volume" class="col-form-label">
+                      Volume Change
+                      <small class="form-text text-muted"> (Optional)</small>
+                    </label>
+                  </div>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" id="form-music-volume" placeholder="Ex: 3.0 means increase volume by this amount">
+                  </div>
+                </div>
+
+                <div class="mt-4 col-md-12"></div>
+                <button type="button" class="btn btn-primary mb-2" id="b-addmusic">Add Character Music</button>
+              </form>
+              <div class="mt-4 col-md-12"></div>
+            </div>
+
+            <div class="collapse-header" data-toggle="collapse" data-target="#s-modrep-music-ev">
+              <h5>Event Music <i class="fa-solid fa-caret-down fa-sm collapse-icon"></i></h5>
+            </div>
+            <div class="mt-3 col-md-12"></div>
+
+            <div id="s-modrep-music-ev" class="collapse show">
+              <form>
+                <div class="form-group row">
+                  <label for="form-eventmusic-event" class="col-sm-3 col-form-label">Event Name</label>
+                  <div class="col-sm-9">
+                    <select class="form-control" id="form-eventmusic-event">
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="form-eventmusic-file" class="col-sm-3 col-form-label">File</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" id="form-eventmusic-file" placeholder="Ex: music/grayhued" required>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="form-eventmusic-loop" class="col-sm-3 col-form-label">
+                    Loop Point
+                    <small class="form-text text-muted"> (Optional)</small>
+                  </label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" id="form-eventmusic-loop" placeholder="Ex: 796411">
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="form-eventmusic-volume" class="col-sm-3 col-form-label">
+                    Volume Change
+                    <small class="form-text text-muted"> (Optional)</small>
+                  </label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" id="form-eventmusic-volume" placeholder="Ex: 3.0 means increase volume by this amount">
+                  </div>
+                </div>
+
+                <div class="mt-4 col-md-12"></div>
+
+                <button type="button" class="btn btn-primary mb-2" id="b-addeventmusic">Add Event Music</button>
+
+              </form>
+              <div class="mt-4 col-md-12"></div>
+            </div>
+          </div>
+
+          <!-- Voice Replacements -->
+          <div class="collapse-header" data-toggle="collapse" data-target="#s-modrep-voices">
+            <h4>Voices <i class="fa-solid fa-caret-down fa-sm collapse-icon"></i></h4>
+          </div>
+          <hr>
+
+          <div id="s-modrep-voices" class="collapse show">
+            <div class="alert alert-primary" role="alert">
+              You can replace character and/or system voices in this section. See the guide for more information.
+            </div>
+
+            <h5>Character Voice</h5>
+            <form class="form-inline">
+              <input type="text" class="form-control mb-2 mr-sm-2" id="form-modrep-voice-chara"
+                placeholder="Ex: voice_cha_qp">
+              <button type="button" class="btn btn-primary mb-2" id="b-addvoice-character">Add Character Voice</button>
+            </form>
+            <div class="mt-3 col-md-12"></div>
+
+            <h5>System Voice</h5>
+            <form class="form-inline">
+              <input type="text" class="form-control mb-2 mr-sm-2" id="form-modrep-voice-sys"
+                placeholder="Ex: voice_sys_suguri">
+              <button type="button" class="btn btn-primary mb-2" id="b-addvoice-sys">Add System Voice</button>
+            </form>
+            <div class="mt-4 col-md-12"></div>
+          </div>
+
+          <!-- Sound Effect Replacements -->
+          <div class="collapse-header" data-toggle="collapse" data-target="#s-modrep-sound">
+            <h4>Sound Effects <i class="fa-solid fa-caret-down fa-sm collapse-icon"></i></h4>
+          </div>
+          <hr>
+          
+          <div id="s-modrep-sound" class="collapse show">
+            <div class="alert alert-primary" role="alert">
+              You can replace sound effects in this section. See the guide for more information.
+            </div>
+
+            <form class="form-inline">
+              <input type="text" class="form-control mb-2 mr-sm-2" id="form-modrep-sound"
+                placeholder="Ex: cancel.wav, cardget.wav">
+              <button type="button" class="btn btn-primary mb-2" id="b-addsound">Add Sound Effect</button>
+            </form>
+            <div class="mt-4 col-md-12"></div>
+          </div>
+          
+          <!-- Hair Color Replacements -->
+          <div class="collapse-header" data-toggle="collapse" data-target="#s-modrep-hair">
+            <h4>Character Hair Colors <i class="fa-solid fa-caret-down fa-sm collapse-icon"></i></h4>
+          </div>          
+          <hr>
+
+          <div id="s-modrep-hair" class="collapse show">
+            <form>
+              <div class="form-group row">
+                <label for="form-hair-unit" class="col-sm-2 col-form-label">Unit ID</label>
+                <div class="col-sm-10">
+                  <select class="form-control" id="form-hair-unit">
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="form-hair-haircolor" class="col-sm-2 col-form-label">Hair Color</label>
+                <div class="col-sm-10">
+                  <select class="form-control" id="form-hair-haircolor">
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="form-hair-technique" class="col-sm-2 col-form-label">Technique</label>
+                <div class="col-sm-10">
+                  <select class="form-control" id="form-hair-technique">
+                    <option>Texture</option>
+                    <option data-hair-type="adv">Single Color</option>
+                    <option data-hair-type="adv">Gradient</option>
+                  </select>
+                </div>
+              </div>
+              <hr>
+
+              <!-- Hair colors -->
+              <div id="s-hairadv" class="expandable">
+                <div class="alert alert-primary" role="alert">
+                  These colors are only used if you select the "Gradient" or "Single Color" technique.
+                </div>
+
+                <div class="form-group row">
+                  <label for="form-hair-base" class="col-sm-6 col-form-label">Base Color </label>
+                  <br>
+                  <div class="col-sm-6">
+                    <input type="color" id="form-hair-base" value="#FFFFFF">
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="form-hair-secondary" class="col-sm-6 col-form-label">Secondary Color (For Gradient) </label>
+                  <br>
+                  <div class="col-sm-6">
+                    <input type="color" id="form-hair-secondary" value="#FFFFFF">
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="form-hair-shadow" class="col-sm-6 col-form-label">Shadow Color </label>
+                  <br>
+                  <div class="col-sm-6">
+                    <input type="color" id="form-hair-shadow" value="#803232">
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="form-hair-add" class="col-sm-6 col-form-label">Glow Color (Makes hair glow/brighter)</label>
+                  <br>
+                  <div class="col-sm-6">
+                    <input type="color" id="form-hair-add" value="#000000">
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-4 col-md-12"></div>
+              <button type="button" class="btn btn-primary mb-2" id="b-addhair">Add Hair Color</button>
+              <p>Note: If there is an existing value for this unit, it's overwritten</p>
+
+            </form>
+            <div class="mt-5 col-md-12"></div>
           </div>
         </div>
-
-        <div class="form-group row">
-          <label for="form-eventmusic-file" class="col-sm-2 col-form-label">File</label>
-          <div class="col-sm-10">
-            <input type="text" class="form-control" id="form-eventmusic-file" placeholder="Ex: music/grayhued" required>
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <label for="form-eventmusic-loop" class="col-sm-2 col-form-label">Loop Point (Optional)</label>
-          <div class="col-sm-10">
-            <input type="text" class="form-control" id="form-eventmusic-loop" placeholder="Ex: 796411">
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <label for="form-eventmusic-volume" class="col-sm-2 col-form-label">Volume Change (Optional)</label>
-          <div class="col-sm-10">
-            <input type="text" class="form-control" id="form-eventmusic-volume" placeholder="Ex: 3.0 means increase volume by this amount">
-          </div>
-        </div>
-
-        <div class="mt-4 col-md-12"></div>
-
-        <button type="button" class="btn btn-primary mb-2" id="b-addeventmusic">Add Event Music</button>
-
-      </form>
-
-      <hr>
-
-      <!-- ------------------------------------------------------------------------- -->
-      <div class="mt-4 col-md-12"></div>
-      <h3>Voices</h3>
-
-      <div class="alert alert-primary" role="alert">
-        You can replace a character and/or system voice in this section. See the guide for info on what files to
-        include in your mod.
       </div>
 
-      <h5>Character Voice</h5>
-      <hr>
-      <form class="form-inline">
-        <input type="text" class="form-control mb-2 mr-sm-2" id="form-modrep-voice-chara"
-          placeholder="Ex: voice_cha_qp">
-        <button type="button" class="btn btn-primary mb-2" id="b-addvoice-character">Add Character Voice</button>
-      </form>
-      <div class="mt-3 col-md-12"></div>
-      <h5>System Voice</h5>
-      <hr>
-      <form class="form-inline">
-        <input type="text" class="form-control mb-2 mr-sm-2" id="form-modrep-voice-sys"
-          placeholder="Ex: voice_sys_suguri">
-        <button type="button" class="btn btn-primary mb-2" id="b-addvoice-sys">Add System Voice</button>
-      </form>
+      <!-- Right Panel -->
+      <div class="col-md-6" style="max-height: 4000px;">
+        <div class="sticky-top" style="top: 10px;">
+          <h3>Output</h3>
+          <p>You can copy the output below or press the "Download" button.
+            <br>Pressing "Download" will always update the JSON data first.</p>
+          <button class="btn btn-primary" id="b-update" type="button">Update JSON</button>
+          <button class="btn btn-primary" id="b-savejson" type="button">Download JSON</button>
 
-      <hr>
+          <div class="mt-4 col-md-12"></div>
+          <div class="alert alert-success" role="alert">
+            <pre id="json-result">----</pre>
+          </div>
 
-
-      <!-- ------------------------------------------------------------------------- -->
-      <div class="mt-4 col-md-12"></div>
-      <h3>Sound Effects</h3>
-      <div class="alert alert-primary" role="alert">
-        You can replace a sound effect by adding its file name. You do not need to include .wav.
+        </div>
       </div>
-
-      <form class="form-inline">
-        <input type="text" class="form-control mb-2 mr-sm-2" id="form-modrep-sound"
-          placeholder="Ex: cancel, cardget.wav">
-        <button type="button" class="btn btn-primary mb-2" id="b-addsound">Add Sound Effect</button>
-      </form>
-      <hr>
-
-
-      <!-- ------------------------------------------------------------------------- -->
-      <div class="mt-4 col-md-12"></div>
-      <h3>Character Hair Colors</h3>
-      <hr>
-
-      <form>
-        <div class="form-group row">
-          <label for="form-hair-unit" class="col-sm-2 col-form-label">Unit ID</label>
-          <div class="col-sm-10">
-            <select class="form-control" id="form-hair-unit">
-            </select>
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <label for="form-hair-haircolor" class="col-sm-2 col-form-label">Hair Color</label>
-          <div class="col-sm-10">
-            <select class="form-control" id="form-hair-haircolor">
-            </select>
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <label for="form-hair-technique" class="col-sm-2 col-form-label">Technique</label>
-          <div class="col-sm-10">
-            <select class="form-control" id="form-hair-technique">
-              <option>Texture</option>
-              <option>Single Color</option>
-              <option>Gradient</option>
-            </select>
-          </div>
-        </div>
-        <hr>
-
-        <!-- Hair colors -->
-        <div class="alert alert-primary" role="alert">
-          These colors are only used if you select the "Gradient" or "Single Color" technique.
-        </div>
-
-        <div class="form-group row">
-          <label for="form-hair-base" class="col-sm-2 col-form-label">Base Color </label>
-          <br>
-          <div class="col-sm-10">
-            <input type="color" id="form-hair-base" value="#FFFFFF">
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <label for="form-hair-secondary" class="col-sm-2 col-form-label">Secondary Color (For Gradient) </label>
-          <br>
-          <div class="col-sm-10">
-            <input type="color" id="form-hair-secondary" value="#FFFFFF">
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <label for="form-hair-shadow" class="col-sm-2 col-form-label">Shadow Color </label>
-          <br>
-          <div class="col-sm-10">
-            <input type="color" id="form-hair-shadow" value="#803232">
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <label for="form-hair-add" class="col-sm-2 col-form-label">Glow Color (Makes hair glow/brighter)</label>
-          <br>
-          <div class="col-sm-10">
-            <input type="color" id="form-hair-add" value="#000000">
-          </div>
-        </div>
-
-        <div class="mt-4 col-md-12"></div>
-        <button type="button" class="btn btn-primary mb-2" id="b-addhair">Add Hair Color</button>
-        <p>Note: If there is an existing value for this unit, it's overwritten</p>
-
-      </form>
-
-      <hr>
-      <div class="mt-5 col-md-12"></div>
-
-
-
-      <!-- ------------------------------------------------------------------------- -->
-      <div class="mt-5 col-md-12"></div>
-      <div>
-        <h3>JSON Output</h3>
-        <p>You can copy the output below or press the "Download" button.
-          <br>Pressing "Download" will always update the JSON data first.</p>
-
-        <hr>
-        <button class="btn btn-primary" id="b-update" type="button">Update JSON</button>
-        <button class="btn btn-primary" id="b-savejson" type="button">Download JSON</button>
-
-        <hr>
-        <div class="alert alert-success" role="alert">
-          <pre id="json-result">----</pre>
-        </div>
-
-      </div>
-
     </div>
-
   </div>
 
-  <hr>
   <!-- Footer container --->
   <div class="container">
-
-
-
   </div>
 
-
-
-
   <!-- Optional JavaScript -->
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <!-- jQuery first, then Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
     integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-    integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"
+    integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous">
   </script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
-    integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous">
-  </script>
+  <script src="tv4.js"></script>
+  <script src="schema.js"></script>
   <script src="data.js"></script>
   <script src="main.js"></script>
 
