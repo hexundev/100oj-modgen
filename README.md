@@ -11,3 +11,6 @@ Disclaimer
 - I made this quickly to try and help people making mods in the new format
 - Feel free to fork and make changes
 
+# Credits
+Original code (2021) - @hexundev<br>
+Update (2025) - [@reiswindy](https://github.com/reiswindy)
